@@ -128,5 +128,5 @@ public class LecturaJSON {
     public String getAño() {
         return año;
     }
-    
+    //S
 }// Fin de la clase LecturaJSON
