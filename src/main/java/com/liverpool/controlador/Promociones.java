@@ -28,7 +28,7 @@ public class Promociones {
             System.out.println("Favor de ingresar el nombre del archivo con extension");
             return;
         }
-      
+        System.out.println("Hola Mundo");
         new Promociones(args[0]);
     }
     
