@@ -114,6 +114,9 @@ Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
 // botn eliminar
 driver.findElement(By.className("button-class")).click();
 
+
+
+
 //     System.out.println("promosiones pagina \n "+driver.findElement(By.cssSelector(".step3 select.promo_selector.active-promo")).getText());
     }
     
