@@ -5,6 +5,8 @@
  */
 package com.liverpool.modelo;
 
+import com.liverpool.utils.RE;
+
 /**
  *
  * @author iasancheza
@@ -19,11 +21,11 @@ public class Beneficio {
     private String montoMinimo;
 
     public Beneficio() {
-        this(DESCUENTO_ADICIONAL, "0.00", "0.00");
+        this(DESCUENTO_ADICIONAL, "0", "0.00");
     }
     
     public Beneficio(String tipoBeneficio){
-        this(tipoBeneficio, "0.00", "0.00");
+        this(tipoBeneficio, "0", "0.00");
     }
     
     public Beneficio(String[] beneficio){
@@ -36,7 +38,7 @@ public class Beneficio {
                     this.tipoBeneficio = dato;
                     break;
                 case 1: // Valor de Beneficio
-                    this.valorBeneficio = dato;
+                    this.valorBeneficio = RE.valorBeneficio(dato);
                     break;
                 case 2: // Monto minimo
                     this.montoMinimo = dato;
@@ -47,7 +49,7 @@ public class Beneficio {
 
     public Beneficio(String tipoBeneficio, String valorBeneficio, String montoMinimo) {
         this.tipoBeneficio = tipoBeneficio;
-        this.valorBeneficio = valorBeneficio;
+        this.valorBeneficio = RE.valorBeneficio(valorBeneficio);
         this.montoMinimo = montoMinimo;
     }
 
@@ -64,7 +66,7 @@ public class Beneficio {
     }
 
     public void setValorBeneficio(String valorBeneficio) {
-        this.valorBeneficio = valorBeneficio;
+        this.valorBeneficio = RE.valorBeneficio(valorBeneficio);
     }
 
     public String getMontoMinimo() {

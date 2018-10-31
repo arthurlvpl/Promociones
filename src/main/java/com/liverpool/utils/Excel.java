@@ -5,8 +5,10 @@
  */
 package com.liverpool.utils;
 
-import com.liverpool.modelo.Promocion;
+import com.liverpool.automatizacion.modelo.Promo;
+import com.liverpool.modelo.PromoSap;
 import com.liverpool.negocio.MyAcount;
+import com.liverpool.promociones.Monitor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +16,7 @@ import java.io.FileOutputStream;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -43,7 +46,7 @@ public class Excel {
         for(int i=row.getFirstCellNum(); i<=row.getLastCellNum(); i++){
             XSSFCell cell = row.getCell(i);
             
-            if(i > 10){
+            if(i > 6){
                 break;
             }
             
@@ -54,37 +57,25 @@ public class Excel {
             
             String value = cell.getStringCellValue().trim();
             switch(i){
-                case 0: 
-                    header = value.equals("Resultado Prod P0");
-                    break;
-                case 1: 
-                    header = value.equals("Resultado Prod P3");
-                    break;
-                case 2: 
-                    header = value.equals("Resultado Staging");
-                    break;
-                case 3: 
-                    header = value.equals("Comentarios");
-                    break;
-                case 4:
+                case 0:
                     header = value.equals("Promotion ID");
                     break;
-                case 5:
+                case 1:
                     header = value.equals("Sección");
                     break;
-                case 6: 
+                case 2: 
                     header = value.equals("Nombre sección");
                     break;
-                case 7: 
+                case 3: 
                     header = value.equals("Paticipa / No participa");
                     break;
-                case 8:
+                case 4:
                     header = value.equals("Tipo de excepción");
                     break;
-                case 9:
+                case 5:
                     header = value.equals("Clave");
                     break;
-                case 10:
+                case 6:
                     header = value.equals("Descripción");
             }
         }
@@ -197,7 +188,7 @@ public class Excel {
         return db.getSku(query, datos).getNumSku();
     }
     
-    private String getPromociones(XSSFRow row, int init){
+    private String getStringPromociones(XSSFRow row, int init){
         StringBuilder promociones = new StringBuilder();
         // Concatenar con |
         XSSFCell cell = null;
@@ -226,10 +217,6 @@ public class Excel {
         // A partir de la celda 11 en adelante comienza el detalle de las promociones
         int contador = -1;
 
-        String rProdP0 = getStringValue(row.getCell(++contador));
-        String rProdP3 = getStringValue(row.getCell(++contador));
-        String rStaging = getStringValue(row.getCell(++contador));
-        String comments = getStringValue(row.getCell(++contador));
         String promotionId = getStringValue(row.getCell(++contador));
         String seccion = getStringValue(row.getCell(++contador));
         String nombreSeccion = getStringValue(row.getCell(++contador));
@@ -244,10 +231,10 @@ public class Excel {
             return;
         }
         
-        ArrayList<Promocion> promociones = new ArrayList<>();
-        String[] promos = getPromociones(row, contador).split("\\|O\\|");
+        ArrayList<PromoSap> promociones = new ArrayList<>();
+        String[] promos = getStringPromociones(row, contador).split("\\|O\\|");
         for(String promo : promos){
-            promociones.add(new Promocion(promo.split("\\|Y\\|")));
+            promociones.add(new PromoSap(promo.split("\\|Y\\|")));
         }
 
         // Ya tenemos las promociones, hay que buscarlas en staging
@@ -255,6 +242,18 @@ public class Excel {
         
         System.out.println("abrir staging: " + sku);
         
+        Monitor monitor = new Monitor();
+        // Seleccionar el radio button de Staging
+        monitor.selectProd();
+        // Ingresar el numero de sku en la caja de texto
+        monitor.insertSku(sku);
+        // Dar click en el boton buscar
+        monitor.buscar();
+        // Seleccionar uno de los resultados obtenidos
+        monitor.selectFirstResult();
+        // Obtener las promociones del sku
+        HashMap<String,ArrayList<Promo>> promosStaging = monitor.getPromociones();
+        System.out.println(promosStaging.size());
     }
     
     public void procesaExcel(File f){

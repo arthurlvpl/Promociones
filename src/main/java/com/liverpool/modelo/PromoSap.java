@@ -5,13 +5,15 @@
  */
 package com.liverpool.modelo;
 
+import com.liverpool.automatizacion.modelo.Promo;
+import com.liverpool.utils.RE;
 import java.util.ArrayList;
 
 /**
  *
  * @author iasancheza
  */
-public class Promocion {
+public class PromoSap {
     public static final String EFECTIVO = "EFECTIVO";
     public static final String CUALQUIER_FORMA_PAGO = "Cualquier Forma de Pago";
     public static final String DILISA = "DILISA";
@@ -23,11 +25,11 @@ public class Promocion {
     private Beneficio beneficio1;
     private Beneficio beneficio2;
 
-    public Promocion() {
+    public PromoSap() {
         this(CUALQUIER_FORMA_PAGO, "", "");
     }
 
-    public Promocion(String formaPago, String msi, String valoresMsi) {
+    public PromoSap(String formaPago, String msi, String valoresMsi) {
         this.formaPago = formaPago;
         this.msi = msi;
         this.valoresMsi = valoresMsi;
@@ -35,7 +37,7 @@ public class Promocion {
         this.beneficio2 = new Beneficio(Beneficio.DESCUENTO_ADICIONAL);
     }
     
-    public Promocion(String[] promocion){
+    public PromoSap(String[] promocion){
         this();
         switch(promocion.length){
             case 3: // Tiene forma de pago y dos beneficios
@@ -44,14 +46,14 @@ public class Promocion {
                 this.beneficio1 = new Beneficio(promocion[1].split("\\|"));
             case 1: // Solo tiene la forma de pago 
                 // Crear la forma de pago y los dos beneficios
-                Promocion pTemp = new Promocion(promocion[0]);
+                PromoSap pTemp = new PromoSap(promocion[0]);
                 this.formaPago = pTemp.formaPago;
                 this.msi = pTemp.msi;
                 this.valoresMsi = pTemp.valoresMsi;
         }
     }
     
-    public Promocion(String promocion){
+    public PromoSap(String promocion){
         this();
         // Hacerle split con \\|
         String[] data = promocion.split("\\|");
@@ -72,20 +74,82 @@ public class Promocion {
     }
     
     public static boolean isFormaDePago(String str){
-        return str.equals(CUALQUIER_FORMA_PAGO) || str.equals(DILISA) || 
-                str.equals(EFECTIVO) || str.equals(EXTERNAS);
+        return str.equals(CUALQUIER_FORMA_PAGO) || str.equals(DILISA) || str.equals(EXTERNAS);
     }
     
-    public static ArrayList<Promocion> getPromos(ArrayList<Promocion> promos, String formaPago){
-        ArrayList<Promocion> promociones = new ArrayList<>();
+    // Param 1: lista de todas las promociones del sku, recuperadas en SAP
+    // Param 2: Filtro para recuperar solo las promos del Param 1 que coincidan con la forma de pago especificada
+    public static ArrayList<PromoSap> getPromos(ArrayList<PromoSap> promos, String formaPago){
+        ArrayList<PromoSap> promociones = new ArrayList<>();
         
         
         
         return promociones;
     }
     
-    public String ponderado(){
-        return "";
+    public ArrayList<Promo> getPromos(){
+        ArrayList<Promo> promos = new ArrayList<>();
+        
+        // Validar si el getPonderado es 0
+        String ponderado = this.getPonderado();
+        
+        // Validar si tiene meses sin interes
+        if(valoresMsi.equals("No Aplica")){
+            
+        }
+        
+        
+        
+        // BANCO:
+        // SAP                     - VALIDACION
+        // DILISA                  - DILISA
+        // EXTERNAS                - EXTERNAS PARTICIPANTES
+        // Cualquier Forma de Pago - DILISA, EXTERNAS PARTICIPANTES, PAGO EFECTIVO
+        
+        final String banco = this.formaPago;
+        switch(banco){
+            case DILISA:
+                promos = new ArrayList<Promo>(){{new Promo();}};
+                promos.get(0).setBanco(Promo.DILISA);
+                break;
+            case EXTERNAS:
+                promos = new ArrayList<Promo>(){{new Promo();}};
+                promos.get(0).setBanco(Promo.EXTERNAS);
+                break;
+            case CUALQUIER_FORMA_PAGO:
+                promos = new ArrayList<Promo>(){{new Promo();new Promo();new Promo();}};
+                for(int i=0; i < promos.size(); i++){
+                    switch(i){
+                        case 0:
+                            promos.get(i).setBanco(Promo.DILISA);
+                            break;
+                        case 1: 
+                            promos.get(i).setBanco(Promo.EXTERNAS);
+                            break;
+                        case 2: 
+                            promos.get(i).setBanco(Promo.EFECTIVO);
+                    }
+                }
+        }
+        
+        
+        
+        return promos;
+    }
+    
+    // En staging mantiene los decimales
+    // en atg lo redondea hacia arriba
+    public String getPonderado(){
+        // No importa si uno o ambos descuentos son cero
+        // El resultado siempre es el correcto
+        int desc1 = Integer.parseInt(beneficio1.getValorBeneficio());
+        int desc2 = Integer.parseInt(beneficio2.getValorBeneficio());
+        float result = (1-(1-desc1/100)*(1-desc2/100))*100;
+        return RE.valorBeneficio(String.valueOf(result));
+    }
+    
+    public String printPonderado(){
+        return getPonderado() + "%";
     }
 
     public String getFormaPago() {

@@ -5,10 +5,12 @@
  */
 package com.liverpool.utils;
 
+import com.liverpool.automatizacion.modelo.Promo;
 import com.liverpool.automatizacion.modelo.Tienda;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +19,43 @@ import java.util.regex.Pattern;
  * @author isancheza
  */
 public class RE {
+    
+    public static String valorBeneficio(String value){
+        final String str = "([\\d]+)[\\.]*[\\d]*[%]*[\\s\\w]*";
+        Pattern pat = Pattern.compile(str);
+        Matcher mat = pat.matcher(value);
+        if(!mat.matches()){
+            return "";
+        }
+        return mat.group(1);
+    }
+    
+    public static String tipoBeneficio(String value){
+        final String str = "^([\\w\\s]+%)$";
+        Pattern pat = Pattern.compile(str);
+        Matcher mat = pat.matcher(value);
+        return mat.group();
+    }
+    
+    public static String valoresMSI(String value){
+        final String str = "^(No Aplica|[\\d]+[\\s,]*[\\s]*)+$";
+        Pattern pat = Pattern.compile(str);
+        Matcher mat = pat.matcher(value);
+        return mat.group();
+    }
+    
+    public static ArrayList<Promo> getPromos(String promoSap){
+        ArrayList<Promo> promos = new ArrayList<>();
+        
+        // Crear una expresion regular que evalue la promo recuperada de SAP
+        // FormaDePago|MSI|VALORES MSI|Y|Tipo de Beneficio|Valor de Beneficio|Monto minimo|Y|Tipo Beneficio|Valor de Beneficio|Monto Minimo
+        final String re = "^([\\w]+)\\|([\\w]+)\\|(No Aplica|[\\d]+[\\s,]*[\\s]*)+\\|Y\\|([\\w\\s]+%)\\|([\\d\\.]+00%)\\|0.00[\\|Y]*[\\|]*([\\w\\s]+%)*[\\|]*([\\d\\.]+00%)*[\\|]*(0.00)*$";
+        //final String re = "^([\\w\\s]+)\\|$";
+        Pattern pat = Pattern.compile(re);
+        Matcher mat = pat.matcher(promoSap);
+        
+        return promos; 
+    }
     
     public static Tienda getTienda(String address){
         Tienda t = null;
