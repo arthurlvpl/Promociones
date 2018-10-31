@@ -31,6 +31,7 @@ public class Promociones {
     }
     
     public static void main(String[] args) {
+
 //        if(args.length < 1){
 //            System.out.println("Favor de ingresar el nombre del archivo con extension");
 //            return;
@@ -48,6 +49,7 @@ public class Promociones {
 
         System.out.println("ya acabe");
       
+
     }
     
 }

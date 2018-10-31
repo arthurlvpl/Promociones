@@ -5,6 +5,9 @@
  */
 package com.liverpool.promociones;
 
+import com.liverpool.automatizacion.modelo.Promo;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -41,8 +44,10 @@ public class Monitor {
         if(element == null){
             return false;
         }
-        element.click();
-        return true;
+        if(!element.isSelected()){
+            element.click();
+        }
+        return element.isSelected();
     }
     
     public boolean selectStaging(){
@@ -51,8 +56,10 @@ public class Monitor {
         if(element == null){
             return false;
         }
-        element.click();
-        return true;
+        if(!element.isSelected()){
+            element.click();
+        }
+        return element.isSelected();
     }
     
     public boolean insertSku(String sku){
@@ -90,7 +97,43 @@ public class Monitor {
         return true;
     }
     
-    
+    public HashMap<String,ArrayList<Promo>> getPromociones(){
+        HashMap<String,ArrayList<Promo>> promociones = new HashMap<>();
+        
+        final String promos = "/html/body/div[1]/div/div/div[2]/div[2]/table/tbody/tr";
+        ArrayList<WebElement> rows = (ArrayList<WebElement>) driver.findElements(By.xpath(promos));
+        for(WebElement r : rows){
+            ArrayList<WebElement> columns = (ArrayList<WebElement>) r.findElements(By.tagName("td"));
+            System.out.println(columns.size());
+            Promo p = new Promo();
+            
+            for(int i=0; i < columns.size(); i++){
+                String dato = columns.get(i).getText();
+                switch(i){
+                    case 0: // Banco
+                        p.setBanco(dato);
+                        break;
+                    case 1: // Descripcion
+                        p.setDescripcion(dato);
+                        break;
+                    case 2: // Descuento
+                        p.setDescuento(dato);
+                        break;
+                    case 3: // Plan
+                        p.setPlan(dato);
+                        break;
+                }
+            }
+            String banco = p.getBanco();
+            ArrayList<Promo> array = promociones.get(banco);
+            if(array == null){
+                array = new ArrayList<>();
+                promociones.put(banco, array);
+            }
+            array.add(p);
+        }
+        return promociones;
+    }
 
     public WebDriver getDriver() {
         return driver;
