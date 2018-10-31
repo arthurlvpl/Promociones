@@ -34,9 +34,9 @@ public class Pdp extends Page {
     public static final String PROMOS_BANCARIAS = "promos_bancarias";
     public static final String ATRIBUTOS_ARTICULO = "atributos_articulo";
     
-    public Pdp(WebDriver driver, Archivo folder) {
-        super(driver, folder);
-        this.properties = Utils.loadProperties(new File(folder,PROPERTIES_FILE).getAbsolutePath());
+    public Pdp(WebDriver driver) {
+        super(driver);
+        this.properties = Utils.loadProperties(new File(PROPERTIES_FILE).getAbsolutePath());
     }
     
     public boolean inputCantidad(String cantidad){

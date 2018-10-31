@@ -28,13 +28,13 @@ public class LoginForm extends Page {
     
     private Header header;
     
-    public LoginForm(WebDriver driver, Archivo folder){
-        super(driver, folder);
+    public LoginForm(WebDriver driver){
+        super(driver);
         
         // cargar el properties
-        this.properties = Utils.loadProperties(new File(folder, PROPERTIES_FILE).getAbsolutePath());
+        this.properties = Utils.loadProperties(new File(PROPERTIES_FILE).getAbsolutePath());
     
-        header = new Header(driver, folder);
+        header = new Header(driver);
     }
     
     public boolean login(LoginUser lu){

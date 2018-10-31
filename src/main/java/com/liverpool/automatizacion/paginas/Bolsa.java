@@ -29,7 +29,7 @@ public class Bolsa {
     }
     
     
-    public void bolsita() {
+    public void bolsita_guest() {
         LecturaJSON LJ = new LecturaJSON();
         //LJ.main(URLS.getJson());
         
@@ -118,6 +118,11 @@ driver.findElement(By.className("button-class")).click();
 
 
 //     System.out.println("promosiones pagina \n "+driver.findElement(By.cssSelector(".step3 select.promo_selector.active-promo")).getText());
+    }
+    
+    public void bolsita_login(){
+        driver.findElement(By.id("addButton")).click();
+        
     }
     
 }

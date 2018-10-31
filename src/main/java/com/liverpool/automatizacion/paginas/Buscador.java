@@ -5,11 +5,14 @@
  */
 package com.liverpool.automatizacion.paginas;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.liverpool.automatizacion.modelo.Archivo;
 import com.liverpool.automatizacion.modelo.Find;
 import com.liverpool.controlador.Ambiente;
 import com.liverpool.utils.Utils;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -27,14 +30,21 @@ public class Buscador extends Page {
     
     private Header header;
     private String ambienteUrl;
-    
+     public Buscador(){
+         super();
+     }
     public Buscador(WebDriver driver, Archivo folder, String ambienteUrl) {
-        super(driver, folder);
+        super(driver);
         this.properties = Utils.loadProperties(new File(folder, PROPERTIES_FILE).getAbsolutePath());
-        this.header = new Header(driver, folder);
+        this.header = new Header(driver);
         this.ambienteUrl = ambienteUrl;
     }
-    
+    public  Buscador(WebDriver driver, String ambienteUrl){
+       super(driver);
+        this.properties = Utils.loadProperties(new File(PROPERTIES_FILE).getAbsolutePath());
+        this.header = new Header(driver);
+        this.ambienteUrl = ambienteUrl;
+    }
     public boolean buscarSku(String sku){
         WebElement element;
         
@@ -44,10 +54,10 @@ public class Buscador extends Page {
         }
         
         element.sendKeys(sku, Keys.ENTER);
-        
+        Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
         // Validar si entro al PDP del sku
         String urlSearch = properties.getProperty(SKU_SEARCH).replace(Ambiente.URL, ambienteUrl)+sku;
-        
+         Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
         if (driver.getCurrentUrl().equals(urlSearch)) {
             // Validar si no se encontro el producto
             if ((element = Find.element(driver, properties.getProperty(LBL_RESULT))) != null) {
@@ -66,7 +76,9 @@ public class Buscador extends Page {
         }
         return true;
     }
-    
+    public void Buscar(String sku){
+        driver.findElement(By.id("")).sendKeys(sku);
+    }
     
     
 }
