@@ -39,11 +39,11 @@ public class Buscador extends Page {
         this.header = new Header(driver);
         this.ambienteUrl = ambienteUrl;
     }
-    public  Buscador(WebDriver driver, String ambienteUrl){
+    public  Buscador(WebDriver driver){
        super(driver);
         this.properties = Utils.loadProperties(new File(PROPERTIES_FILE).getAbsolutePath());
         this.header = new Header(driver);
-        this.ambienteUrl = ambienteUrl;
+        //this.ambienteUrl = ambienteUrl;
     }
     public boolean buscarSku(String sku){
         WebElement element;
@@ -77,7 +77,13 @@ public class Buscador extends Page {
         return true;
     }
     public void Buscar(String sku){
-        driver.findElement(By.id("")).sendKeys(sku);
+        
+        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        // coloca el sku en el buscador
+        driver.findElement(By.id("buscador")).sendKeys(sku);
+        // click en la lupa del buscador
+        driver.findElement(By.className("btn-search")).click();
+        
     }
     
     

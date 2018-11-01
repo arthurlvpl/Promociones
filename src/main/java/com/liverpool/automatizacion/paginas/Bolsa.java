@@ -1,15 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.liverpool.automatizacion.paginas;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import static com.liverpool.automatizacion.paginas.Buscador.PROPERTIES_FILE;
+import com.liverpool.promociones.Login;
 import com.liverpool.utils.LecturaJSON;
-//import com.mycompany.configuraciones.LecturaJSON;
-//import static com.mycompany.promosions.Excel.fila;
-//import static com.mycompany.promosions.InicializarDriver.driver;
+import com.liverpool.utils.Utils;
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import org.json.simple.parser.ParseException;
@@ -22,14 +19,14 @@ import org.openqa.selenium.support.ui.Select;
  * @author JCGASCAG
  */
 public class Bolsa {
-    private WebDriver driver;
+   
     
-    public Bolsa(WebDriver driver){
-        this.driver = driver;
-    }
+
+
     
     
-    public void bolsita_guest() {
+    
+    public void bolsita_guest(WebDriver driver) {
         LecturaJSON LJ = new LecturaJSON();
         //LJ.main(URLS.getJson());
         
@@ -70,9 +67,6 @@ public class Bolsa {
         int numero = (int) (Math.random() * 32) + 1;
         driver.findElement(By.xpath("//*[@id='select-a-store']/option["+numero+"]")).click();
         Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
-        //        driver.findElement(By.name("store")).click();
-//        //*[@id="700005"]
-//         Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
 driver.findElement(By.name("/atg/commerce/order/purchase/ShippingGroupFormHandler.createAndMoveToBilling")).click();
 // COLOCACIÓN DEL NÚMERO DEL LA TARJETA
 Select Tarjeta = new Select (driver.findElement(By.name("/atg/commerce/order/purchase/PaymentGroupFormHandler.creditCardValues.creditCardType")));
@@ -120,8 +114,93 @@ driver.findElement(By.className("button-class")).click();
 //     System.out.println("promosiones pagina \n "+driver.findElement(By.cssSelector(".step3 select.promo_selector.active-promo")).getText());
     }
     
-    public void bolsita_login(){
-        driver.findElement(By.id("addButton")).click();
+    public void bolsita_login(WebDriver driver){
+        
+        boolean btn;
+        // verifica si el boton agrgar a mi bolsa existe 
+        try {
+            driver.findElement(By.id("addButton")).click();
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            // Cerra el pop-pup emergente
+            driver.findElement(By.cssSelector("a.fancybox-item.fancybox-close.icon-liv-close")).click();
+           Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            // Click en la bolsita
+            driver.findElement(By.id("cart-count")).click();
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            // Click en el botn pagar
+            driver.findElement(By.className("btn-primary")).click();
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            // click en el button radio de enviar a tienda
+            driver.findElement(By.xpath("//*[@id='storepickup']/div/div/label")).click();
+            // selecciona aleatoriamente un estado de la lista
+            int numero = (int) (Math.random() * 32) + 1;
+            driver.findElement(By.xpath("//*[@id='select-a-store']/option["+numero+"]")).click();
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            // selecciona una tienda
+            driver.findElement(By.xpath("//*[@id='showAddress']/span[1]")).click();
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            // click en el botón de siguiente paso
+            driver.findElement(By.xpath("//*[@id='form_checkout_ship_add']/span[2]")).click();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+            // seleccionamos la tarjeta
+            driver.findElement(By.xpath("//*[@id='billingFormIdlp']/div/label")).click();
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            // colocar nip de la tarjeta
+            driver.findElement(By.id("nip_express")).sendKeys("123");
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            // click en el boton de siguiente paso
+            driver.findElement(By.xpath("//*[@id='pay-options']/div[3]/span[2]/a/span")).click();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+            // tomar los valores de la promocion
+            String promoTarjeta = driver.findElement(By.id("list_products")).getText();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+            System.out.println("promoTarjeta\n"+promoTarjeta);
+            // click en el boton de regresar
+            driver.findElement(By.xpath("//*[@id='main-left']/div/a/div")).click();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+            // click en el boton paypal
+            driver.findElement(By.xpath("//*[@id='payments']/li[2]/img")).click();
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            // click en el botón de siguiente paso
+            driver.findElement(By.xpath("//*[@id='pay-options']/div[3]/span[2]/a/span")).click();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+            // tomar la promociones 
+            String paypal;
+            paypal = driver.findElement(By.id("list_products")).getText();
+            System.out.println("paypal "+paypal);
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+            // clieck en el boton regresar
+            driver.findElement(By.xpath("//*[@id='main-left']/div/a/div")).click();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+            // click en el boton pago en efectivo
+            driver.findElement(By.xpath("//*[@id='payments']/li[3]")).click();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+            // click en el boton de siguiente paso
+            driver.findElement(By.xpath("//*[@id='pay-options']/div[3]/span[2]/a/span")).click();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+            String efectivo;
+            efectivo = driver.findElement(By.id("list_products")).getText();
+            
+            System.out.println("efectivo "+efectivo);
+            // click en el boton de regresar 
+            driver.findElement(By.xpath("//*[@id='main-left']/div/a/div")).click();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+             // click en el boton de regresar 
+            driver.findElement(By.xpath("//*[@id='pay-options']/div[3]/span[1]/a/span")).click();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+             // click en el boton de regresar 
+            driver.findElement(By.xpath("//*[@id='form_checkout_ship_add']/span[1]/a")).click();
+            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+           // click en el boon quitar de mi lista
+           driver.findElement(By.xpath("//*[@id='remove_1']/a")).click();
+           Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+           // click en el boton seguir comprando
+           driver.findElement(By.className("btn-main")).click();
+//           
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         
     }
     

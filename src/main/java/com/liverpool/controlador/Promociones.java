@@ -5,6 +5,7 @@
  */
 package com.liverpool.controlador;
 
+import com.liverpool.automatizacion.paginas.Bolsa;
 import com.liverpool.automatizacion.paginas.Buscador;
 import com.liverpool.automatizacion.paginas.Page;
 import com.liverpool.promociones.Login;
@@ -40,12 +41,13 @@ public class Promociones {
         System.out.println("Hola Mundo");
 //        new Promociones(args[0]);
         Login login = new Login();
+        Bolsa bolsa = new Bolsa();
         Properties p = Utils.loadProperties("Promocion.properties");
         login.iniciar_sesion(p.getProperty("usuario"),p.getProperty("password"));
-        Buscador b = new Buscador(login.getDriver(),"https://www.liverpool.com.mx");
-        
-        b.buscarSku("1022237779");
-       
+        Buscador b = new Buscador(login.getDriver());
+//        
+        b.Buscar("1022237779");
+        bolsa.bolsita_login(login.getDriver());
 
         System.out.println("ya acabe");
       
