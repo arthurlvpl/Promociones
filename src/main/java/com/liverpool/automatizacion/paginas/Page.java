@@ -17,14 +17,15 @@ import org.openqa.selenium.WebDriver;
  */
 public class Page {
     protected WebDriver driver;
-    protected Archivo folder;
     protected ArrayList<Validacion> validaciones;
     protected Properties properties;
     
-    
-    public Page(WebDriver driver, Archivo folder){
+    public Page(){
+        
+    }
+
+    public Page(WebDriver driver){
         this.driver = driver;
-        this.folder = folder;
         this.validaciones = new ArrayList<>();
     }
 
@@ -34,14 +35,6 @@ public class Page {
 
     public void setDriver(WebDriver driver) {
         this.driver = driver;
-    }
-
-    public Archivo getFolder() {
-        return folder;
-    }
-
-    public void setFolder(Archivo folder) {
-        this.folder = folder;
     }
 
     public ArrayList<Validacion> getValidaciones() {

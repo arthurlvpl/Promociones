@@ -316,7 +316,7 @@ public class Checkout extends Matriz {
                 continue;
             }
             
-            Pdp pdp = new Pdp(driver, folder);
+            Pdp pdp = new Pdp(driver);
             if(!pdp.inputCantidad(sku.getCantidad())){
                 continue;
             }

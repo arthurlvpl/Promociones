@@ -1,0 +1,6 @@
+[31/10/2018 09:02:43] - Ocurrio una excepcion al cargar el archivo de configuracion: C:\Users\jcgascag\Documents\NetBeansProjects\Promociones\buscador.properties
+[31/10/2018 09:02:43] - java.io.FileNotFoundException: C:\Users\jcgascag\Documents\NetBeansProjects\Promociones\buscador.properties (The system cannot find the file specified)
+[31/10/2018 09:02:43] - Ocurrio una excepcion al leer el archivo: C:\Users\jcgascag\Documents\NetBeansProjects\Promociones\buscador.properties
+[31/10/2018 09:02:43] - Ocurrio una excepcion al cargar el archivo de configuracion: C:\Users\jcgascag\Documents\NetBeansProjects\Promociones\header.properties
+[31/10/2018 09:02:43] - java.io.FileNotFoundException: C:\Users\jcgascag\Documents\NetBeansProjects\Promociones\header.properties (The system cannot find the file specified)
+[31/10/2018 09:02:43] - Ocurrio una excepcion al leer el archivo: C:\Users\jcgascag\Documents\NetBeansProjects\Promociones\header.properties

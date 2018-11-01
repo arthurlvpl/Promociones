@@ -35,11 +35,11 @@ public class Header extends Page {
     public static final String A_AYUDA = "a_ayuda";
     public static final String A_TIENDAS = "a_tiendas";
     
-    public Header(WebDriver driver, Archivo folder){
-        super(driver, folder);
+    public Header(WebDriver driver){
+        super(driver);
         
         // cargar el properties
-        this.properties = Utils.loadProperties(new File(folder, PROPERTIES_FILE).getAbsolutePath());
+        this.properties = Utils.loadProperties(new File(PROPERTIES_FILE).getAbsolutePath());
     }
     
     public WebElement buscador(){
